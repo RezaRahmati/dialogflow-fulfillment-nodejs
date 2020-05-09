@@ -15,6 +15,7 @@
  */
 const {
   RichResponse,
+  PLATFORMS,
 } = require('./rich-response');
 
 /**
@@ -38,6 +39,7 @@ class TelephonyTransferCall extends RichResponse {
 
     if (typeof phoneNumber === 'string') {
       this.phoneNumber = phoneNumber;
+      this.platform = PLATFORMS.TELEPHONY;
     }
   }
 
@@ -68,11 +70,16 @@ class TelephonyTransferCall extends RichResponse {
    * @private
    */
   getV2ResponseObject_(platform) {
+    if (this.platform && this.platform !== platform) {
+      // if it is and is not for the specific platform return null
+      return null;
+    }
+
     return {
       telephonyTransferCall: {
         phoneNumber: this.phoneNumber,
       },
-      platform: 'TELEPHONY',
+      platform: PLATFORMS.TELEPHONY,
     };
   }
 }
