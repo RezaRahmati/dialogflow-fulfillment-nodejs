@@ -57,7 +57,7 @@ class TelephonyTransferCall extends RichResponse {
    *
    * @private
    */
-  getV1ResponseObject_() {
+  getV1ResponseObject_(platform) {
     throw new Error('Telephony num supported in V1');
   }
 
@@ -67,7 +67,7 @@ class TelephonyTransferCall extends RichResponse {
    * @return {Object?} message telephony transfer
    * @private
    */
-  getV2ResponseObject_() {
+  getV2ResponseObject_(platform) {
     return {
       telephonyTransferCall: {
         phoneNumber: this.phoneNumber,
