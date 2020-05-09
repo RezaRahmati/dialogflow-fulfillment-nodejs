@@ -15,8 +15,6 @@
  */
 const {
   RichResponse,
-  PLATFORMS,
-  V2_TO_V1_PLATFORM_NAME,
 } = require('./rich-response');
 
 /**
@@ -57,11 +55,10 @@ class TelephonyTransferCall extends RichResponse {
   /**
    * Get the the response object of the telephony transfer
    *
-   * @return {Object?} message telephony transfer
    * @private
    */
   getV1ResponseObject_() {
-    throw new Error('Telephony num supported in V1')
+    throw new Error('Telephony num supported in V1');
   }
 
   /**
@@ -71,11 +68,9 @@ class TelephonyTransferCall extends RichResponse {
    * @private
    */
   getV2ResponseObject_() {
-
-
     return {
       telephonyTransferCall: {
-        phoneNumber: this.phoneNumber
+        phoneNumber: this.phoneNumber,
       },
       platform: 'TELEPHONY',
     };
