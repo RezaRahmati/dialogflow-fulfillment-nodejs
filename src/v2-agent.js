@@ -241,7 +241,7 @@ class V2Agent {
   sendResponses_(requestSource) {
     let responseJson = this.responseJson_;
 
-    debug(`sendResponses_ responseJson ${JOSN.stringify(responseJson, null, 2)}`);
+    debug(`sendResponses_ responseJson ${JSON.stringify(responseJson, null, 2)}`);
 
     if (this.agent.followupEvent_) {
       responseJson = responseJson || {};
