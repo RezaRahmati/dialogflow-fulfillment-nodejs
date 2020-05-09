@@ -41,8 +41,6 @@ class TelephonyTransferCall extends RichResponse {
 
     if (typeof phoneNumber === 'string') {
       this.phoneNumber = phoneNumber;
-      this.platform = PLATFORMS.TELEPHONY;
-
     }
 
     debug(`TelephonyTransferCall.constructor ${this.phoneNumber} ${this.platform}`);
