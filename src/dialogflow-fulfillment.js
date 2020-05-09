@@ -268,6 +268,7 @@ class WebhookClient {
    * @param {RichResponse|string} response an object or string representing the rich response to be added
    */
   addResponse_(response) {
+    debug(`adding response ${JSON.stringify(response)}`)
     if (typeof response === 'string') {
       response = new Text(response);
     }
@@ -278,6 +279,7 @@ class WebhookClient {
     } else if (response instanceof Payload && this.existingPayload_(response.platform)) {
       throw new Error(`Payload response for ${response.platform} already defined.`);
     } else if (response instanceof RichResponse) {
+      debug(`adding rich response ${JSON.stringify(response)}`)
       this.responseMessages_.push(response);
     } else {
       throw new Error(`Unknown response type: "${JSON.stringify(response)}"`);
@@ -312,11 +314,13 @@ class WebhookClient {
 
     if (handler.get(this.intent)) {
       let result = handler.get(this.intent)(this);
+      debug(`result 1 ${JSON.stringify(result, null, 2)}`);
       // If handler is a promise use it, otherwise create use default (empty) promise
       let promise = Promise.resolve(result);
       return promise.then(() => this.send_());
     } else if (handler.get(null)) {
       let result = handler.get(null)(this);
+      debug(`result 2 ${JSON.stringify(result, null, 2)}`);
       // If handler is a promise use it, otherwise create use default (empty) promise
       let promise = Promise.resolve(result);
       return promise.then(() => this.send_());
@@ -479,6 +483,9 @@ class WebhookClient {
     const requestSource = this.requestSource;
     const messages = this.responseMessages_;
 
+    debug(`send_ requestSource ${requestSource}`);
+    debug(`send_ messages.length ${messages.length}`);
+    debug(`send_ messages ${JSON.stringify(messages, null, 2)}`);
     // If AoG response and the first response isn't a text response,
     // add a empty text response as the first item
     if (
