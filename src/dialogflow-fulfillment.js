@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const {debug, error, DialogflowConversation} = require('./common');
+const { debug, error, DialogflowConversation } = require('./common');
 // Response and agent classes
 const Text = require('./rich-responses/text-response');
 const Card = require('./rich-responses/card-response');
 const Image = require('./rich-responses/image-response');
 const Suggestion = require('./rich-responses/suggestions-response');
 const Payload = require('./rich-responses/payload-response');
+const TelephonyTransferCall = require('./rich-responses/telephony-transfer-call-response');
 const {
   RichResponse,
   PLATFORMS,
@@ -244,7 +245,7 @@ class WebhookClient {
    */
   add(responses) {
     if (responses instanceof Array) {
-      responses.forEach( (singleResponse) => this.addResponse_(singleResponse) );
+      responses.forEach((singleResponse) => this.addResponse_(singleResponse));
     } else {
       this.addResponse_(responses);
     }
@@ -304,7 +305,7 @@ class WebhookClient {
       this.response_
         .status(RESPONSE_CODE_BAD_REQUEST)
         .status('handleRequest argument must be a function or map of intent names to functions');
-      return Promise.reject( new Error(
+      return Promise.reject(new Error(
         'handleRequest argument must be a function or map of intent names to functions'
       ));
     }
@@ -433,7 +434,7 @@ class WebhookClient {
    */
   setFollowupEvent(event) {
     if (typeof event === 'string') {
-      event = {name: event};
+      event = { name: event };
     } else if (typeof event.name !== 'string' || !event.name) {
       throw new Error('Followup event must be a string or have a name string');
     }
@@ -560,4 +561,4 @@ class WebhookClient {
   }
 }
 
-module.exports = {WebhookClient, Text, Card, Image, Suggestion, Payload};
+module.exports = { WebhookClient, Text, Card, Image, Suggestion, Payload, TelephonyTransferCall };

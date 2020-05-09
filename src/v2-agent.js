@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const {debug, error} = require('./common');
+const { debug, error } = require('./common');
 
 // Response Builder classes
 const {
@@ -26,6 +26,7 @@ const Card = require('./rich-responses/card-response');
 const Image = require('./rich-responses/image-response');
 const Suggestion = require('./rich-responses/suggestions-response');
 const PayloadResponse = require('./rich-responses/payload-response');
+const TelephonyTransferCall = require('./rich-responses/telephony-transfer-call-response');
 
 // Contexts class
 const Contexts = require('./contexts');
@@ -149,8 +150,8 @@ class V2Agent {
      * Original request language code (i.e. "en")
      * @type {string} locale language code indicating the spoken/written language of the original request
      */
-     this.agent.locale = this.agent.request_.body.queryResult.languageCode;
-     debug(`Request locale: ${JSON.stringify(this.agent.locale)}`);
+    this.agent.locale = this.agent.request_.body.queryResult.languageCode;
+    debug(`Request locale: ${JSON.stringify(this.agent.locale)}`);
 
     /**
      * List of messages defined in Dialogflow's console for the matched intent
@@ -189,7 +190,7 @@ class V2Agent {
   addTextResponse_() {
     const message = this.agent.responseMessages_[0];
     const fulfillmentText = message.ssml || message.text;
-    this.addJson_({fulfillmentText: fulfillmentText});
+    this.addJson_({ fulfillmentText: fulfillmentText });
   }
 
   /**
@@ -201,7 +202,7 @@ class V2Agent {
    * @private
    */
   addPayloadResponse_(payload, requestSource) {
-    this.addJson_({payload: payload.getPayload_(requestSource)});
+    this.addJson_({ payload: payload.getPayload_(requestSource) });
   }
 
   /**
@@ -214,7 +215,7 @@ class V2Agent {
   addMessagesResponse_(requestSource) {
     let messages = this.buildResponseMessages_(requestSource);
     if (messages.length > 0) {
-      this.addJson_({fulfillmentMessages: messages});
+      this.addJson_({ fulfillmentMessages: messages });
     }
   }
 
@@ -358,6 +359,7 @@ class V2Agent {
       text: this.convertTextJson_,
       card: this.convertCardJson_,
       image: this.convertImageJson_,
+      telephony: this.convertTelephonyJson_,
       payload: this.convertPayloadJson_,
       quickReplies: this.convertQuickRepliesJson_,
       simpleResponses: this.convertSimpleResponsesJson_,
@@ -394,7 +396,7 @@ class V2Agent {
     if (!messageJson.text.text[0]) {
       return null;
     } else {
-      return new Text({text: messageJson.text.text[0], platform: platform});
+      return new Text({ text: messageJson.text.text[0], platform: platform });
     }
   }
 
@@ -428,6 +430,15 @@ class V2Agent {
   convertImageJson_(messageJson, platform) {
     return new Image({
       imageUrl: messageJson.image.imageUri,
+      platform: platform,
+    });
+  }
+
+  convertTelephonyJson_(messageJson, platform) {
+    return new TelephonyTransferCall({
+      telephonyTransferCall: {
+        phoneNumber: messageJson.telephonyTransferCall.phoneNumber,
+      },
       platform: platform,
     });
   }
