@@ -21,66 +21,66 @@
 
 const test = require('ava');
 
-const {WebhookClient} = require('../src/dialogflow-fulfillment');
-const {Card, Suggestion} = require('../src/dialogflow-fulfillment');
+const { WebhookClient } = require('../src/dialogflow-fulfillment');
+const { Card, Suggestion, TelephonyTransferCall } = require('../src/dialogflow-fulfillment');
 
 test('v2 Integration test', async (t) => {
   // v2 Google welcome
-  let googleV2WelcomeRequest = {body: mockGoogleV2RequestWelcome};
+  let googleV2WelcomeRequest = { body: mockGoogleV2RequestWelcome };
   webhookTest(googleV2WelcomeRequest, (responseJson) => {
     t.deepEqual(responseJson, mockGoogleV2ResponseWelcome);
   });
 
   // v2 Slack welcome
-  let slackV2WelcomeRequest = {body: mockSlackV2RequestWelcome};
+  let slackV2WelcomeRequest = { body: mockSlackV2RequestWelcome };
   webhookTest(slackV2WelcomeRequest, (responseJson) => {
     t.deepEqual(responseJson, mockSlackV2ResponseWelcome);
   });
 
   // v2 Facebook welcome
-  let facebookV2WelcomeRequest = {body: mockFacebookV2RequestWelcome};
+  let facebookV2WelcomeRequest = { body: mockFacebookV2RequestWelcome };
   webhookTest(facebookV2WelcomeRequest, (responseJson) => {
     t.deepEqual(responseJson, mockFacebookV2ResponseWelcome);
   });
 
   // v2 Google fallback
-  let googleV2FallbackRequest = {body: mockGoogleV2RequestFallback};
+  let googleV2FallbackRequest = { body: mockGoogleV2RequestFallback };
   webhookTest(googleV2FallbackRequest, (responseJson) => {
     t.deepEqual(responseJson, mockGoogleV2ResponseFallback);
   });
 
   // v2 Slack fallback
-  let slackV2FallbackRequest = {body: mockSlackV2RequestFallback};
+  let slackV2FallbackRequest = { body: mockSlackV2RequestFallback };
   webhookTest(slackV2FallbackRequest, (responseJson) => {
     t.deepEqual(responseJson, mockSlackV2ResponseFallback);
   });
 
   // v2 Facebook fallback
-  let facebookV2FallbackRequest = {body: mockFacebookV2RequestFallback};
+  let facebookV2FallbackRequest = { body: mockFacebookV2RequestFallback };
   webhookTest(facebookV2FallbackRequest, (responseJson) => {
     t.deepEqual(responseJson, mockFacebookV2ResponseFallback);
   });
 
   // v2 Google webhook
-  let googleV2WebhookRequest = {body: mockGoogleV2RequestWebhook};
+  let googleV2WebhookRequest = { body: mockGoogleV2RequestWebhook };
   webhookTest(googleV2WebhookRequest, (responseJson) => {
     t.deepEqual(responseJson, mockGoogleV2ResponseWebhook);
   });
 
   // v2 Slack webhook
-  let slackV2WebhookRequest = {body: mockSlackV2RequestWebhook};
+  let slackV2WebhookRequest = { body: mockSlackV2RequestWebhook };
   webhookTest(slackV2WebhookRequest, (responseJson) => {
     t.deepEqual(responseJson, mockSlackV2ResponseWebhook);
   });
 
   // v2 Facebook webhook
-  let facebookV2WebhookRequest = {body: mockFacebookV2RequestWebhook};
+  let facebookV2WebhookRequest = { body: mockFacebookV2RequestWebhook };
   webhookTest(facebookV2WebhookRequest, (responseJson) => {
     t.deepEqual(responseJson, mockFacebookV2ResponseWebhook);
   });
 
   // v2 simulator webhook
-  let simulatorV2WebhookRequest = {body: mockSimulatorV2RequestOther};
+  let simulatorV2WebhookRequest = { body: mockSimulatorV2RequestOther };
   webhookTest(simulatorV2WebhookRequest, (responseJson) => {
     t.deepEqual(responseJson, mockSimulatorV2ResponseOther);
   });
@@ -93,7 +93,7 @@ test('v2 Integration test', async (t) => {
  */
 function webhookTest(request, callback) {
   let response = new ResponseMock(callback);
-  const agent = new WebhookClient({request: request, response: response});
+  const agent = new WebhookClient({ request: request, response: response });
   /**
    * Handler function to welcome
    * @param {Object} agent
@@ -118,18 +118,19 @@ function webhookTest(request, callback) {
     agent.setContext({
       name: 'weather',
       lifespan: 2,
-      parameters: {city: 'Rome'},
+      parameters: { city: 'Rome' },
     });
     agent.add(new Card({
-        title: 'Title: this is a card title',
-        text: 'This is the body text of a card.  You can even use line\nbreaks and emoji! 💁',
-        imageUrl: 'https://developers.google.com/actions/images/badges/XPM_BADGING_GoogleAssistant_VER.png',
-        buttonText: 'This is a button',
-        buttonUrl: 'https://assistant.google.com/',
-      })
+      title: 'Title: this is a card title',
+      text: 'This is the body text of a card.  You can even use line\nbreaks and emoji! 💁',
+      imageUrl: 'https://developers.google.com/actions/images/badges/XPM_BADGING_GoogleAssistant_VER.png',
+      buttonText: 'This is a button',
+      buttonUrl: 'https://assistant.google.com/',
+    })
     );
     agent.add(new Suggestion('Quick Reply'));
     agent.add(new Suggestion('Suggestion'));
+    agent.add(new TelephonyTransferCall('+16475874521'));
   }
 
   let actionMap = new Map();
@@ -245,7 +246,7 @@ const mockSimulatorV2ResponseOther = {
       },
     },
     {
-      quickReplies: {quickReplies: ['Quick Reply', 'Suggestion']},
+      quickReplies: { quickReplies: ['Quick Reply', 'Suggestion'] },
     },
   ],
   outputContexts: [
@@ -253,7 +254,7 @@ const mockSimulatorV2ResponseOther = {
       name:
         'projects/agent52-3e1ea/agent/sessions/669d7da3-de6f-4b1d-8394-d79c6973e516/contexts/weather',
       lifespanCount: 2,
-      parameters: {city: 'Rome'},
+      parameters: { city: 'Rome' },
     },
   ],
 };
@@ -267,7 +268,7 @@ const mockGoogleV2RequestWelcome = {
     parameters: {},
     allRequiredParamsPresent: true,
     fulfillmentText: 'Greetings!',
-    fulfillmentMessages: [{text: {text: ['Hi!']}}],
+    fulfillmentMessages: [{ text: { text: ['Hi!'] } }],
     outputContexts: [
       {
         name:
@@ -306,14 +307,14 @@ const mockGoogleV2RequestWelcome = {
       isInSandbox: true,
       surface: {
         capabilities: [
-          {name: 'actions.capability.AUDIO_OUTPUT'},
-          {name: 'actions.capability.WEB_BROWSER'},
-          {name: 'actions.capability.SCREEN_OUTPUT'},
+          { name: 'actions.capability.AUDIO_OUTPUT' },
+          { name: 'actions.capability.WEB_BROWSER' },
+          { name: 'actions.capability.SCREEN_OUTPUT' },
         ],
       },
       inputs: [
         {
-          rawInputs: [{query: 'talk to my test app', inputType: 'KEYBOARD'}],
+          rawInputs: [{ query: 'talk to my test app', inputType: 'KEYBOARD' }],
           intent: 'actions.intent.MAIN',
         },
       ],
@@ -323,12 +324,12 @@ const mockGoogleV2RequestWelcome = {
         userId:
           'ABwppHHixRyLmiAcc4IihWQOCUfSLS1Dw6OezP3e0_CqqJNkbXFCTxGNi_Zi_oc3r86CR0nyHwcDRqIEHQ',
       },
-      conversation: {conversationId: '1515179321602', type: 'NEW'},
+      conversation: { conversationId: '1515179321602', type: 'NEW' },
       availableSurfaces: [
         {
           capabilities: [
-            {name: 'actions.capability.AUDIO_OUTPUT'},
-            {name: 'actions.capability.SCREEN_OUTPUT'},
+            { name: 'actions.capability.AUDIO_OUTPUT' },
+            { name: 'actions.capability.SCREEN_OUTPUT' },
           ],
         },
       ],
@@ -349,13 +350,13 @@ const mockSlackV2RequestWelcome = {
     parameters: {},
     allRequiredParamsPresent: true,
     fulfillmentText: 'Good day!',
-    fulfillmentMessages: [{text: {text: ['Greetings!']}}],
+    fulfillmentMessages: [{ text: { text: ['Greetings!'] } }],
     outputContexts: [
       {
         name:
           'projects/stagent-f2236/agent/sessions/88d13aa8-2999-4f71-b233-39cbf3a824a0/contexts/generic',
         lifespanCount: 4,
-        parameters: {slack_user_id: 'U2URF86K1', slack_channel: 'D3XQ6AF9A'},
+        parameters: { slack_user_id: 'U2URF86K1', slack_channel: 'D3XQ6AF9A' },
       },
     ],
     intent: {
@@ -396,18 +397,18 @@ const mockFacebookV2RequestWelcome = {
     parameters: {},
     allRequiredParamsPresent: true,
     fulfillmentText: 'Greetings!',
-    fulfillmentMessages: [{text: {text: ['Hello!']}}],
+    fulfillmentMessages: [{ text: { text: ['Hello!'] } }],
     outputContexts: [
       {
         name:
           'projects/stagent-f2236/agent/sessions/3c32f610-3f2b-4bd8-9712-43eb69c06c43/contexts/weather',
-        parameters: {city: 'Rome'},
+        parameters: { city: 'Rome' },
       },
       {
         name:
           'projects/stagent-f2236/agent/sessions/3c32f610-3f2b-4bd8-9712-43eb69c06c43/contexts/generic',
         lifespanCount: 4,
-        parameters: {facebook_sender_id: '1534862223272449'},
+        parameters: { facebook_sender_id: '1534862223272449' },
       },
     ],
     intent: {
@@ -422,8 +423,8 @@ const mockFacebookV2RequestWelcome = {
   originalDetectIntentRequest: {
     payload: {
       data: {
-        sender: {id: '1534862223272449'},
-        recipient: {id: '958823367603818'},
+        sender: { id: '1534862223272449' },
+        recipient: { id: '958823367603818' },
         message: {
           mid: 'mid.$cAAMy_rGG1eZm-Y6amVgyElUX6Wlk',
           text: 'hi',
@@ -452,7 +453,7 @@ const mockGoogleV2RequestFallback = {
     allRequiredParamsPresent: true,
     fulfillmentText: 'I missed what you said. Say it again?',
     fulfillmentMessages: [
-      {text: {text: ['Sorry, could you say that again?']}},
+      { text: { text: ['Sorry, could you say that again?'] } },
     ],
     outputContexts: [
       {
@@ -488,14 +489,14 @@ const mockGoogleV2RequestFallback = {
       isInSandbox: true,
       surface: {
         capabilities: [
-          {name: 'actions.capability.SCREEN_OUTPUT'},
-          {name: 'actions.capability.AUDIO_OUTPUT'},
-          {name: 'actions.capability.WEB_BROWSER'},
+          { name: 'actions.capability.SCREEN_OUTPUT' },
+          { name: 'actions.capability.AUDIO_OUTPUT' },
+          { name: 'actions.capability.WEB_BROWSER' },
         ],
       },
       inputs: [
         {
-          rawInputs: [{query: '4t3pouiewjflknsd', inputType: 'KEYBOARD'}],
+          rawInputs: [{ query: '4t3pouiewjflknsd', inputType: 'KEYBOARD' }],
           arguments: [
             {
               rawText: '4t3pouiewjflknsd',
@@ -520,8 +521,8 @@ const mockGoogleV2RequestFallback = {
       availableSurfaces: [
         {
           capabilities: [
-            {name: 'actions.capability.SCREEN_OUTPUT'},
-            {name: 'actions.capability.AUDIO_OUTPUT'},
+            { name: 'actions.capability.SCREEN_OUTPUT' },
+            { name: 'actions.capability.AUDIO_OUTPUT' },
           ],
         },
       ],
@@ -566,14 +567,14 @@ const mockSlackV2RequestFallback = {
     allRequiredParamsPresent: true,
     fulfillmentText: 'Can you say that again?',
     fulfillmentMessages: [
-      {text: {text: ['I missed what you said. Say it again?']}},
+      { text: { text: ['I missed what you said. Say it again?'] } },
     ],
     outputContexts: [
       {
         name:
           'projects/stagent-f2236/agent/sessions/88d13aa8-2999-4f71-b233-39cbf3a824a0/contexts/generic',
         lifespanCount: 4,
-        parameters: {slack_user_id: 'U2URF86K1', slack_channel: 'D3XQ6AF9A'},
+        parameters: { slack_user_id: 'U2URF86K1', slack_channel: 'D3XQ6AF9A' },
       },
     ],
     intent: {
@@ -603,8 +604,8 @@ const mockSlackV2RequestFallback = {
 };
 const mockSlackV2ResponseFallback = {
   fulfillmentMessages: [
-    {text: {text: ['I didn\'t understand']}, platform: 'SLACK'},
-    {text: {text: ['I\'m sorry, can you try again?']}, platform: 'SLACK'},
+    { text: { text: ['I didn\'t understand'] }, platform: 'SLACK' },
+    { text: { text: ['I\'m sorry, can you try again?'] }, platform: 'SLACK' },
   ],
   outputContexts: [],
 };
@@ -617,13 +618,13 @@ const mockFacebookV2RequestFallback = {
     parameters: {},
     allRequiredParamsPresent: true,
     fulfillmentText: 'Sorry, could you say that again?',
-    fulfillmentMessages: [{text: {text: ['Sorry, I didn\'t get that.']}}],
+    fulfillmentMessages: [{ text: { text: ['Sorry, I didn\'t get that.'] } }],
     outputContexts: [
       {
         name:
           'projects/stagent-f2236/agent/sessions/3c32f610-3f2b-4bd8-9712-43eb69c06c43/contexts/generic',
         lifespanCount: 4,
-        parameters: {facebook_sender_id: '1534862223272449'},
+        parameters: { facebook_sender_id: '1534862223272449' },
       },
     ],
     intent: {
@@ -638,8 +639,8 @@ const mockFacebookV2RequestFallback = {
   originalDetectIntentRequest: {
     payload: {
       data: {
-        sender: {id: '1534862223272449'},
-        recipient: {id: '958823367603818'},
+        sender: { id: '1534862223272449' },
+        recipient: { id: '958823367603818' },
         message: {
           mid: 'mid.$cAAMy_rGG1eZm-ZB_c1gyEs5OzmmF',
           text: 'tiourejflkdn',
@@ -655,8 +656,8 @@ const mockFacebookV2RequestFallback = {
 };
 const mockFacebookV2ResponseFallback = {
   fulfillmentMessages: [
-    {text: {text: ['I didn\'t understand']}, platform: 'FACEBOOK'},
-    {text: {text: ['I\'m sorry, can you try again?']}, platform: 'FACEBOOK'},
+    { text: { text: ['I didn\'t understand'] }, platform: 'FACEBOOK' },
+    { text: { text: ['I\'m sorry, can you try again?'] }, platform: 'FACEBOOK' },
   ],
   outputContexts: [],
 };
@@ -669,7 +670,7 @@ const mockGoogleV2RequestWebhook = {
     parameters: {},
     allRequiredParamsPresent: true,
     fulfillmentText: 'webhook failure',
-    fulfillmentMessages: [{text: {text: ['webhook failure']}}],
+    fulfillmentMessages: [{ text: { text: ['webhook failure'] } }],
     outputContexts: [
       {
         name:
@@ -704,16 +705,16 @@ const mockGoogleV2RequestWebhook = {
       isInSandbox: true,
       surface: {
         capabilities: [
-          {name: 'actions.capability.SCREEN_OUTPUT'},
-          {name: 'actions.capability.WEB_BROWSER'},
-          {name: 'actions.capability.AUDIO_OUTPUT'},
+          { name: 'actions.capability.SCREEN_OUTPUT' },
+          { name: 'actions.capability.WEB_BROWSER' },
+          { name: 'actions.capability.AUDIO_OUTPUT' },
         ],
       },
       inputs: [
         {
-          rawInputs: [{query: 'webhook', inputType: 'KEYBOARD'}],
+          rawInputs: [{ query: 'webhook', inputType: 'KEYBOARD' }],
           arguments: [
-            {rawText: 'webhook', textValue: 'webhook', name: 'text'},
+            { rawText: 'webhook', textValue: 'webhook', name: 'text' },
           ],
           intent: 'actions.intent.TEXT',
         },
@@ -732,8 +733,8 @@ const mockGoogleV2RequestWebhook = {
       availableSurfaces: [
         {
           capabilities: [
-            {name: 'actions.capability.SCREEN_OUTPUT'},
-            {name: 'actions.capability.AUDIO_OUTPUT'},
+            { name: 'actions.capability.SCREEN_OUTPUT' },
+            { name: 'actions.capability.AUDIO_OUTPUT' },
           ],
         },
       ],
@@ -766,13 +767,13 @@ const mockGoogleV2ResponseWebhook = {
             'https://developers.google.com/actions/images/badges/XPM_BADGING_GoogleAssistant_VER.png',
           accessibilityText: 'accessibility text',
         },
-        buttons: [{openUriAction: {uri: 'https://assistant.google.com/'}, title: 'This is a button'}],
+        buttons: [{ openUriAction: { uri: 'https://assistant.google.com/' }, title: 'This is a button' }],
       },
       platform: 'ACTIONS_ON_GOOGLE',
     },
     {
       suggestions: {
-        suggestions: [{title: 'Quick Reply'}, {title: 'Suggestion'}],
+        suggestions: [{ title: 'Quick Reply' }, { title: 'Suggestion' }],
       },
       platform: 'ACTIONS_ON_GOOGLE',
     },
@@ -782,7 +783,7 @@ const mockGoogleV2ResponseWebhook = {
       name:
         'projects/stagent-f2236/agent/sessions/1515187868717/contexts/weather',
       lifespanCount: 2,
-      parameters: {city: 'Rome'},
+      parameters: { city: 'Rome' },
     },
   ],
 };
@@ -794,13 +795,13 @@ const mockSlackV2RequestWebhook = {
     parameters: {},
     allRequiredParamsPresent: true,
     fulfillmentText: 'webhook failure',
-    fulfillmentMessages: [{text: {text: ['webhook failure']}}],
+    fulfillmentMessages: [{ text: { text: ['webhook failure'] } }],
     outputContexts: [
       {
         name:
           'projects/stagent-f2236/agent/sessions/88d13aa8-2999-4f71-b233-39cbf3a824a0/contexts/generic',
         lifespanCount: 4,
-        parameters: {slack_user_id: 'U2URF86K1', slack_channel: 'D3XQ6AF9A'},
+        parameters: { slack_user_id: 'U2URF86K1', slack_channel: 'D3XQ6AF9A' },
       },
     ],
     intent: {
@@ -855,7 +856,7 @@ const mockSlackV2ResponseWebhook = {
       platform: 'SLACK',
     },
     {
-      quickReplies: {quickReplies: ['Quick Reply', 'Suggestion']},
+      quickReplies: { quickReplies: ['Quick Reply', 'Suggestion'] },
       platform: 'SLACK',
     },
   ],
@@ -864,7 +865,7 @@ const mockSlackV2ResponseWebhook = {
       name:
         'projects/stagent-f2236/agent/sessions/88d13aa8-2999-4f71-b233-39cbf3a824a0/contexts/weather',
       lifespanCount: 2,
-      parameters: {city: 'Rome'},
+      parameters: { city: 'Rome' },
     },
   ],
 };
@@ -876,13 +877,13 @@ const mockFacebookV2RequestWebhook = {
     parameters: {},
     allRequiredParamsPresent: true,
     fulfillmentText: 'webhook failure',
-    fulfillmentMessages: [{text: {text: ['webhook failure']}}],
+    fulfillmentMessages: [{ text: { text: ['webhook failure'] } }],
     outputContexts: [
       {
         name:
           'projects/stagent-f2236/agent/sessions/3c32f610-3f2b-4bd8-9712-43eb69c06c43/contexts/generic',
         lifespanCount: 4,
-        parameters: {facebook_sender_id: '1534862223272449'},
+        parameters: { facebook_sender_id: '1534862223272449' },
       },
     ],
     intent: {
@@ -897,8 +898,8 @@ const mockFacebookV2RequestWebhook = {
   originalDetectIntentRequest: {
     payload: {
       data: {
-        sender: {id: '1534862223272449'},
-        recipient: {id: '958823367603818'},
+        sender: { id: '1534862223272449' },
+        recipient: { id: '958823367603818' },
         message: {
           mid: 'mid.$cAAMy_rGG1eZm-RHbmlgx8yTpzmWk',
           text: 'webhook',
@@ -939,7 +940,7 @@ const mockFacebookV2ResponseWebhook = {
       platform: 'FACEBOOK',
     },
     {
-      quickReplies: {quickReplies: ['Quick Reply', 'Suggestion']},
+      quickReplies: { quickReplies: ['Quick Reply', 'Suggestion'] },
       platform: 'FACEBOOK',
     },
   ],
@@ -948,7 +949,7 @@ const mockFacebookV2ResponseWebhook = {
       name:
         'projects/stagent-f2236/agent/sessions/3c32f610-3f2b-4bd8-9712-43eb69c06c43/contexts/weather',
       lifespanCount: 2,
-      parameters: {city: 'Rome'},
+      parameters: { city: 'Rome' },
     },
   ],
 };
