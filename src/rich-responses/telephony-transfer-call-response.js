@@ -18,7 +18,7 @@ const {
   PLATFORMS,
 } = require('./rich-response');
 
-const { debug, error } = require('./../common');
+const { debug } = require('./../common');
 
 /**
  * Class representing a telephony transfer call response
