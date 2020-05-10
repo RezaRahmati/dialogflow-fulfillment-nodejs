@@ -15,16 +15,16 @@
  */
 const { DialogflowConversation } = require('actions-on-google');
 
-// Set library name for debug statements
-// const name = 'dialogflow-fulfillment';
-// // Setup debug library for error and debug statements
-// const debug = require('debug')(`${name}:debug`);
-// const error = require('debug')(`${name}:error`);
-// // bind error and debug to error and log consoles
-// error.log = console.error.bind(console);
-// debug.log = console.log.bind(console);
+//Set library name for debug statements
+const name = 'dialogflow-fulfillment';
+// Setup debug library for error and debug statements
+const debug = require('debug')(`${name}:debug`);
+const error = require('debug')(`${name}:error`);
+// bind error and debug to error and log consoles
+error.log = console.error.bind(console);
+debug.log = console.log.bind(console);
 
-const debug = (...args) => console.log('dialogflow-fulfillment', ...args);
-const error = (...args) => console.error('dialogflow-fulfillment', ...args);
+// const debug = (...args) => console.log('dialogflow-fulfillment', ...args);
+// const error = (...args) => console.error('dialogflow-fulfillment', ...args);
 
 module.exports = { debug, error, DialogflowConversation };

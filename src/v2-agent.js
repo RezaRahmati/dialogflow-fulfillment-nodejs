@@ -242,8 +242,6 @@ class V2Agent {
   sendResponses_(requestSource) {
     let responseJson = this.responseJson_;
 
-    debug(`sendResponses_ responseJson ${JSON.stringify(responseJson, null, 2)}`);
-
     if (this.agent.followupEvent_) {
       responseJson = responseJson || {};
       responseJson.followupEventInput = this.agent.followupEvent_;
@@ -271,9 +269,6 @@ class V2Agent {
    * @private
    */
   buildResponseMessages_(requestSource) {
-    debug(`buildResponseMessages_ requestSource ${requestSource}`);
-    debug(`buildResponseMessages_ agent.responseMessages_.length ${this.agent.responseMessages_.length}`);
-    debug(`buildResponseMessages_ agent.responseMessages_ ${JSON.stringify(this.agent.responseMessages_, null, 2)}`);
     const result = this.agent.responseMessages_.map((message) => message.getV2ResponseObject_(requestSource)).
       filter((arr) => arr);
 
@@ -444,7 +439,6 @@ class V2Agent {
   }
 
   convertTelephonyTransferCallJson_(messageJson, platform) {
-    debug(`convertTelephonyTransferCallJson_ ${messageJson} ${platform}`);
     return new TelephonyTransferCall({
       telephonyTransferCall: {
         phoneNumber: messageJson.telephonyTransferCall.phoneNumber,
@@ -454,7 +448,6 @@ class V2Agent {
   }
 
   convertTelephonySynthesizeSpeechJson_(messageJson, platform) {
-    debug(`convertTelephonySynthesizeSpeechJson_ ${messageJson} ${platform}`);
     return new TelephonySynthesizeSpeech({
       telephonySynthesizeSpeech: {
         text: messageJson.telephonySynthesizeSpeech.text,
