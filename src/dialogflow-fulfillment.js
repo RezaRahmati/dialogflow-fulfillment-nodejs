@@ -21,6 +21,7 @@ const Image = require('./rich-responses/image-response');
 const Suggestion = require('./rich-responses/suggestions-response');
 const Payload = require('./rich-responses/payload-response');
 const TelephonyTransferCall = require('./rich-responses/telephony-transfer-call-response');
+const TelephonySynthesizeSpeech = require('./rich-responses/telephony-synthesize-speech-response');
 const {
   RichResponse,
   PLATFORMS,
@@ -568,4 +569,4 @@ class WebhookClient {
   }
 }
 
-module.exports = { WebhookClient, Text, Card, Image, Suggestion, Payload, TelephonyTransferCall };
+module.exports = { WebhookClient, Text, Card, Image, Suggestion, Payload, TelephonyTransferCall, TelephonySynthesizeSpeech };

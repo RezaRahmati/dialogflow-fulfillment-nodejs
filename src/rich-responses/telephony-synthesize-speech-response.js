@@ -22,36 +22,35 @@ const {
  * Class representing a telephony transfer call response
  * @extends RichResponse
  */
-class TelephonyTransferCall extends RichResponse {
+class TelephonySynthesizeSpeech extends RichResponse {
   /**
-   * Constructor for TelephonyTransferCall object
+   * Constructor for TelephonySynthesizeSpeech object
   *
    *
-   * @param {string} phoneNumber string indicating target phoneNumber to transfer To
+   * @param {string} text string indicating target text to transfer To
    */
-  constructor(phoneNumber) {
+  constructor(text, ssml) {
     super();
-    if (phoneNumber == null) {
+    if (text == null && ssml == null) {
       throw new Error(
-        'string required by TelephonyTransferCall constructor'
+        'text or ssml required by TelephonySynthesizeSpeech constructor'
       );
     }
 
-    if (typeof phoneNumber === 'string') {
-      this.phoneNumber = phoneNumber;
+    if (text != null && ssml != null) {
+      throw new Error(
+        'either text or ssml should be provided to TelephonySynthesizeSpeech constructor'
+      );
     }
 
-  }
+    if (text != null && typeof text === 'string') {
+      this.text = text;
+    }
 
-  /**
-   * Set the phone number
-   *
-   * @param {string} phoneNumber
-   * @return {phoneNumber}
-   */
-  setPhoneNumber(phoneNumber) {
-    this.phoneNumber = phoneNumber;
-    return this;
+    if (ssml != null && typeof ssml === 'string') {
+      this.text = ssml;
+    }
+
   }
 
   /**
@@ -76,12 +75,14 @@ class TelephonyTransferCall extends RichResponse {
     }
 
     return {
-      telephonyTransferCall: {
-        phoneNumber: this.phoneNumber,
+      telephonySynthesizeSpeech: {
+        text: this.text,
+        ssml: this.ssml,
+        source: this.text != null ? 'text' : 'ssml'
       },
       platform: PLATFORMS.TELEPHONY,
     };
   }
 }
 
-module.exports = TelephonyTransferCall;
+module.exports = TelephonySynthesizeSpeech;

@@ -27,6 +27,7 @@ const Image = require('./rich-responses/image-response');
 const Suggestion = require('./rich-responses/suggestions-response');
 const PayloadResponse = require('./rich-responses/payload-response');
 const TelephonyTransferCall = require('./rich-responses/telephony-transfer-call-response');
+const TelephonySynthesizeSpeech = require('./rich-responses/telephony-synthesize-speech-response');
 
 // Contexts class
 const Contexts = require('./contexts');
@@ -366,7 +367,8 @@ class V2Agent {
       text: this.convertTextJson_,
       card: this.convertCardJson_,
       image: this.convertImageJson_,
-      telephony: this.convertTelephonyJson_,
+      telephonyTransferCall: this.convertTelephonyTransferCallJson_,
+      telephonySynthesizeSpeech: this.convertTelephonySynthesizeSpeechJson_,
       payload: this.convertPayloadJson_,
       quickReplies: this.convertQuickRepliesJson_,
       simpleResponses: this.convertSimpleResponsesJson_,
@@ -441,11 +443,23 @@ class V2Agent {
     });
   }
 
-  convertTelephonyJson_(messageJson, platform) {
-    debug(`convertTelephonyJson_ ${messageJson} ${platform}`);
+  convertTelephonyTransferCallJson_(messageJson, platform) {
+    debug(`convertTelephonyTransferCallJson_ ${messageJson} ${platform}`);
     return new TelephonyTransferCall({
       telephonyTransferCall: {
         phoneNumber: messageJson.telephonyTransferCall.phoneNumber,
+      },
+      platform: platform,
+    });
+  }
+
+  convertTelephonySynthesizeSpeechJson_(messageJson, platform) {
+    debug(`convertTelephonySynthesizeSpeechJson_ ${messageJson} ${platform}`);
+    return new TelephonySynthesizeSpeech({
+      telephonySynthesizeSpeech: {
+        text: messageJson.telephonySynthesizeSpeech.text,
+        ssml: messageJson.telephonySynthesizeSpeech.ssml,
+        source: messageJson.telephonySynthesizeSpeech.source,
       },
       platform: platform,
     });
